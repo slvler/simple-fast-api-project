@@ -1,9 +1,10 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from config import settings
 
+URL_DATABASE = f'mysql+pymysql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 
-URL_DATABASE = 'mysql+pymysql://root:DhGX/_(8C9/WmCLV@127.0.0.1:3308/delivery'
 
 engine = create_engine(URL_DATABASE)
 
