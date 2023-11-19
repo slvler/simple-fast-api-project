@@ -1,0 +1,6 @@
+lib
+bin
+pvenvc.cfg
+.idea
+__pycache__
+pyvenv.cfg
