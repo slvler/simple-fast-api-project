@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from slugify import slugify
 
 from schemas import BlogRequest
+from schemas import BlogOut
 from models import Blog
 from database import db_dependency
 
@@ -33,11 +34,11 @@ def store(request: BlogRequest, db: Session = Depends(db_dependency)):
         return JSONResponse(status_code=status.HTTP_201_CREATED, content={"message": 'fail'})
 
 
-@blog_router.get('/show/{blog_id}')
+@blog_router.get('/show/{blog_id}', response_model=BlogOut)
 def show(blog_id: int, db: Session = Depends(db_dependency)):
     blog = db.query(Blog).filter(Blog.id == blog_id).first()
     if blog is not None:
-        return {'message': 'successfully', 'blog': blog}
+        return blog
     else:
         return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content={"message": 'fail'})
 

@@ -1,5 +1,10 @@
-from fastapi import APIRouter, status, Depends
+import time
+from typing import Callable
+
+from fastapi import APIRouter, status, Depends, Request, Response
 from fastapi.responses import JSONResponse
+from fastapi.routing import APIRoute
+from typing import List, Optional, Type
 from auth2 import create_access_token
 from schemas import AuthRequest
 from schemas import RegisterRequest
@@ -7,7 +12,27 @@ from models import User
 from database import db_dependency
 from sqlalchemy.orm import Session
 
-auth_router = APIRouter(prefix='/auth',tags=['auth'])
+
+
+class TimedRoute(APIRoute):
+    def get_route_handler(self) -> Callable:
+        original_route_handler = super().get_route_handler()
+
+        async def custom_route_handler(request: Request) -> Response:
+            before = time.time()
+            response: Response = await original_route_handler(request)
+            auth_token = request.headers.get('Authorization')
+            duration = time.time() - before
+            response.headers["X-Response-Time"] = str(duration)
+            print(f"route duration: {duration}")
+            print(f"route response: {response}")
+            print(f"route response headers: {response.headers}")
+            return response
+
+        return custom_route_handler
+
+auth_router = APIRouter(prefix='/auth',tags=['auth'], route_class=TimedRoute)
+
 
 
 @auth_router.get('/login')

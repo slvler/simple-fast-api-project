@@ -26,3 +26,22 @@ class RegisterRequest(BaseModel):
 
 class TokenData(BaseModel):
     id: int
+
+
+
+class CategoryOut(BaseModel):
+    name: str
+    description: str
+    slug: str
+
+class BlogOut(BaseModel):
+    name: str
+    description: str
+    category_relation: CategoryOut
+    class Config:
+        orm_mode = True
+
+
+
+
+
