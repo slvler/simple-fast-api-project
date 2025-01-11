@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import ENUM
 from enums.general_status import Status
 
-status_enum = ENUM(Status.USER.value, Status.COMPANY.value, name='general_status', create_type=False)
+status_enum = ENUM(Status.user.value, Status.company.value, name='general_status', create_type=False)
 
 # revision identifiers, used by Alembic.
 revision: str = '327d4854bedb'

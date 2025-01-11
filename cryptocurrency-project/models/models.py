@@ -30,7 +30,6 @@ class BankAccount(Base):
     swift_number: Mapped[str] = Column(String)
     type = Column(
         Enum(Status, name="general_status_enum"),
-        default=Status.USER.value,
         nullable=False
     )
     created_at = Column(DateTime, default=datetime.utcnow)
@@ -47,7 +46,6 @@ class SavedWallet(Base):
     network_id: Mapped[int] = Column(Integer)
     type = Column(
         Enum(Status, name="general_status_enum"),
-        default=Status.USER.value,
         nullable=False
     )
     created_at = Column(DateTime, default=datetime.utcnow)
