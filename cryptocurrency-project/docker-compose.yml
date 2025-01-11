@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+   container_name: python_container
+   build:
+    context: ./
+    dockerfile: Dockerfile
+   ports:
+    - "8000:8000"
+   volumes:
+    - ./:/app
+   depends_on:
+     - db
+   networks:
+    - python
+
+  db:
+    container_name: container_postgres
+    image: postgres
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - python
+
+  admin:
+    image: dpage/pgadmin4:7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "root@admin.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "81:80"
+    depends_on:
+      - db
+    networks:
+      - python
+
+networks:
+  python:
+    name: python
+    driver: bridge
