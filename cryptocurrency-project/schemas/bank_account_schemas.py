@@ -9,3 +9,13 @@ class storeRequest(BaseModel):
     bank_account: str
     swift_number: str
     type: Status
+
+
+class updateRequest(BaseModel):
+    currency_id: int
+    label: str
+    iban: str
+    bank_name: str
+    bank_account: str
+    swift_number: str
+    type: Status

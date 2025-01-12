@@ -1,10 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
-from schemas.bank_account_schemas import storeRequest
-from models.models import BankAccount
+from fastapi import APIRouter, Depends
+from schemas.bank_account_schemas import storeRequest, updateRequest
 from config.database import SessionLocal
 from sqlalchemy.orm import Session
-from datetime import datetime
+from controllers.bank_account_controllers import index, store, show, update, delete
 
 bank_router = APIRouter(prefix='/bank-account', tags=['bank_account'])
 
@@ -15,29 +13,22 @@ def get_db():
     finally:
         db.close()
 
+@bank_router.get("/")
+def index_request(db: Session = Depends(get_db)):
+    return index(db)
 
 @bank_router.post("/store")
-def register(request: storeRequest, db: Session = Depends(get_db)):
+def store_request(request: storeRequest, db: Session = Depends(get_db)):
+    return store(request, db)
 
-    new_bank_account = BankAccount(
-        currency_id=request.currency_id,
-        label=request.label,
-        iban=request.iban,
-        bank_name=request.bank_name,
-        bank_account=request.bank_account,
-        swift_number=request.swift_number,
-        type=request.type,
-        created_at=datetime.now(),
-        updated_at=datetime.now()
-    )
+@bank_router.get("/{id}")
+def show_request(id: int, db: Session = Depends(get_db)):
+    return show(id, db)
 
-    try:
-        db.add(new_bank_account)
-        db.commit()
-        db.refresh(new_bank_account)
-        content = {"message": "Success"}
-        return JSONResponse(content=content, status_code=200)
-    except Exception as e:
-        db.rollback()
-        raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
+@bank_router.put("/{id}")
+def update_request(id: int, request: updateRequest, db: Session = Depends(get_db)):
+    return update(id, request, db)
 
+@bank_router.delete("/{id}")
+def delete_request(id: int, db: Session = Depends(get_db)):
+    return delete(id, db)
