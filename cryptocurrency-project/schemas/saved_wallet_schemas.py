@@ -1,8 +1,17 @@
 from pydantic import BaseModel
 from enums.general_status import Status
 
-
 class storeRequest(BaseModel):
-    pass
+    name: str
+    address: str
+    asset_id: int
+    network_id: int
+    type: Status
+
 class updateRequest(BaseModel):
-    pass
+    name: str
+    address: str
+    asset_id: int
+    network_id: int
+    type: Status
+
